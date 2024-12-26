@@ -5,7 +5,7 @@ import { AppContext } from '../context/AppContext';
 const TopDoctors = () => {
     // Initialize the navigate function to programmatically navigate to different routes
     const navigate = useNavigate();
-    
+
     // Access the 'doctors' data from the AppContext
     const { doctors } = useContext(AppContext);
 
@@ -23,12 +23,12 @@ const TopDoctors = () => {
                     <div
                         key={index}
                         // Navigate to the appointment page with the selected doctor's ID
-                        onClick={() => navigate(`/appointment/${item._id}`)}
+                        onClick={() => { navigate(`/appointment/${item._id}`), scrollTo(0, 0) }}
                         className="border border-blue-200 rounded-xl overflow-hidden cursor-pointer hover:translate-y-[-10px] transition-all duration-500"
                     >
                         {/* Doctor's Image */}
                         <img src={item.image} alt="" className="bg-blue-50" />
-                        
+
                         {/* Doctor's Details */}
                         <div className="p-4">
                             {/* Availability Indicator */}
@@ -36,10 +36,10 @@ const TopDoctors = () => {
                                 <p className="w-2 h-2 bg-green-500 rounded-full"></p>
                                 <p>Available</p>
                             </div>
-                            
+
                             {/* Doctor's Name */}
                             <p className="text-gray-900 text-lg font-medium">{item.name}</p>
-                            
+
                             {/* Doctor's Speciality */}
                             <p className="text-gray-600 text-sm">{item.speciality}</p>
                         </div>
@@ -49,8 +49,8 @@ const TopDoctors = () => {
 
             {/* 'More' Button to navigate to the complete list of doctors */}
             <button
-                onClick={() => { 
-                    navigate('/doctors'); 
+                onClick={() => {
+                    navigate('/doctors');
                     scrollTo(0, 0); // Scroll to the top of the page
                 }}
                 className="bg-blue-50 text-gray-600 px-12 py-3 rounded-full mt-10"
