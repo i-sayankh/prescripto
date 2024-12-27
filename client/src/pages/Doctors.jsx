@@ -1,45 +1,64 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { AppContext } from "../context/AppContext"; // Importing AppContext for shared state
+import { AppContext } from "../context/AppContext";
 
+/**
+ * Doctors Component
+ * Displays a filterable list of doctors with their specialities.
+ * Allows users to filter doctors by speciality and navigate to individual doctor appointments.
+ */
 const Doctors = () => {
-  // Extracting the 'speciality' parameter from the URL
+  // URL parameter for speciality-based filtering
   const { speciality } = useParams();
 
-  // Accessing the doctors data from the context
+  // Access shared doctors data from context
   const { doctors } = useContext(AppContext);
 
-  // navigate function to programmatically navigate between pages
+  // Hook for programmatic navigation
   const navigate = useNavigate();
 
-  // State to store filtered doctors based on speciality
+  // State for storing filtered doctors list
   const [filterDoc, setFilterDoc] = useState([]);
 
-  // Function to filter doctors based on the speciality
+  // State to control filter visibility on mobile devices
+  const [showFilter, setShowFilter] = useState(false);
+
+  /**
+   * Filters the doctors list based on selected speciality
+   * If no speciality is selected, shows all doctors
+   */
   const applyFilter = () => {
     if (speciality) {
-      // Filter doctors by the given speciality from the URL
       setFilterDoc(doctors.filter(doc => doc.speciality === speciality));
     } else {
-      // If no speciality is provided, show all doctors
       setFilterDoc(doctors);
     }
   };
 
-  // Applying the filter whenever 'doctors' or 'speciality' changes
+  // Apply filters when doctors data or speciality changes
   useEffect(() => {
     applyFilter();
   }, [doctors, speciality]);
 
   return (
     <div>
-      {/* Description for the page */}
+      {/* Page description */}
       <p className="text-gray-600">Browse through the doctors specialist.</p>
 
       <div className="flex flex-col sm:flex-row items-start gap-5 mt-5">
-        {/* Speciality filter buttons */}
-        <div className=" flex flex-col gap-4 text-sm text-gray-600">
-          {/* Button for each speciality that navigates to filtered doctor list */}
+        {/* Mobile filter toggle button */}
+        <button
+          className={`py-1 px-3 border rounded text-sm transition-all sm:hidden
+            ${showFilter ? "bg-primary text-white" : ""}`}
+          onClick={() => setShowFilter(prev => !prev)}
+        >
+          Filters
+        </button>
+
+        {/* Speciality filter section */}
+        <div className={`flex-col gap-4 text-sm text-gray-600 ${showFilter ? 'flex' : 'hidden sm:flex'}`}>
+          {/* Filter buttons for each speciality
+              Each button toggles between filtered and unfiltered view */}
           <p
             onClick={() => speciality === 'General physician' ? navigate('/doctors') : navigate('/doctors/General physician')}
             className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer 
@@ -47,6 +66,7 @@ const Doctors = () => {
           >
             General physician
           </p>
+          {/* Similar structure repeated for other specialities */}
           <p
             onClick={() => speciality === 'Gynecologist' ? navigate('/doctors') : navigate('/doctors/Gynecologist')}
             className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer
@@ -84,31 +104,28 @@ const Doctors = () => {
           </p>
         </div>
 
-        {/* Displaying the filtered list of doctors */}
+        {/* Doctors grid section */}
         <div className="w-full grid grid-cols-auto gap-4 gap-y-6">
-          {/* Mapping over the filtered list of doctors */}
+          {/* Map through filtered doctors and display their cards */}
           {filterDoc.map((item, index) => (
             <div
               key={index}
-              // Navigate to the appointment page with the selected doctor's ID
               onClick={() => navigate(`/appointment/${item._id}`)}
               className="border border-blue-200 rounded-xl overflow-hidden cursor-pointer hover:translate-y-[-10px] transition-all duration-500"
             >
-              {/* Doctor's Image */}
+              {/* Doctor's profile image */}
               <img src={item.image} alt="" className="bg-blue-50" />
 
-              {/* Doctor's Details */}
+              {/* Doctor's information card */}
               <div className="p-4">
-                {/* Availability Indicator */}
+                {/* Availability status indicator */}
                 <div className="flex items-center gap-2 text-sm text-center text-green-500">
                   <p className="w-2 h-2 bg-green-500 rounded-full"></p>
                   <p>Available</p>
                 </div>
 
-                {/* Doctor's Name */}
+                {/* Doctor's name and speciality */}
                 <p className="text-gray-900 text-lg font-medium">{item.name}</p>
-
-                {/* Doctor's Speciality */}
                 <p className="text-gray-600 text-sm">{item.speciality}</p>
               </div>
             </div>
@@ -116,7 +133,7 @@ const Doctors = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Doctors;
