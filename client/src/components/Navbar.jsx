@@ -37,7 +37,7 @@ const Navbar = () => {
                 {
                     token ? ( /* Conditional Rendering: If user is logged in */
                         <div className="flex items-center gap-2 cursor-pointer group relative"> {/* User Profile Dropdown */}
-                            <img src={assets.profile_pic} alt="" className="w-8 rounded-full" /> {/* Profile Picture */}
+                            <img src={assets.hitler_pic} alt="" className="w-8 rounded-full" /> {/* Profile Picture */}
                             <img src={assets.dropdown_icon} alt="" className="w-2.5" /> {/* Dropdown Icon */}
 
                             {/* Dropdown Menu */}
